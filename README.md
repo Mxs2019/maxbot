@@ -1,10 +1,17 @@
 # maxbot
 
-Drive a browser with GPT
+Maxbot is a fork of [Natbot](https://github.com/nat/natbot) that improves upon the DOM management and reasoning of the bot.
 
-This repo is an improvement upon the
+Overall the goal is to drive a web browser with GPT and perform tasks.
 
-Here's a demo: https://twitter.com/natfriedman/status/1575631194032549888
+## Prompt Management
+
+This repo uses [Prompt Wrangler]() for prompt management. To get started follow the steps:
+
+1. Create an Prompt Wrangler account
+2. Clone the Prompt into your own account.
+3. Update the `prompt_wrangler.py` file with your own worksapce
+4. Add a .env
 
 ## Improvements
 
