@@ -1,14 +1,18 @@
-# natbot
+# maxbot
 
-Drive a browser with GPT-3
+Drive a browser with GPT
+
+This repo is an improvement upon the
 
 Here's a demo: https://twitter.com/natfriedman/status/1575631194032549888
 
-Lots of ideas for improvement:
-- Better prompt
-- Prompt chaining
-- Make a recorder to collect human feedback and do better few-shot
-- Better DOM serialization
-- Let the agent use multiple tabs and switch between them
+## Improvements
 
-Improvements welcome!
+### Better DOM Managment
+
+- [ ] Ability to interact with selects
+- [x] Only include elements that are visible (hidden elements were currently making it)
+
+### Better Reasoning
+
+- [ ] Add memory that stores past steps
