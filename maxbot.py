@@ -15,11 +15,13 @@ import argparse
 
 load_dotenv()
 
-personal_information = """Name: Max Shaw
-Phone Number: 2032738840
-Email: maxdshaw@gmail.com"""
+# Get personal information from ./personal.txt
+PERSONAL_INFORAMTION = ""
+with open("./personal.txt", "r", encoding="utf-8") as f:
+    personal_information = f.read()
 
-default_objective = (
+
+DEFAULT_OBJECTIVE = (
     "Book a reservation at Dos Caminos in New York City for 4 people on Friday"
 )
 # objective = "Book a flight from New York to San Francisco on Friday"
@@ -41,7 +43,7 @@ if __name__ == "__main__":
         "--headless", action="store_true", default=False, help="Run in headless mode"
     )
     parser.add_argument(
-        "--objective", type=str, default=default_objective, help="Objective to complete"
+        "--objective", type=str, default=DEFAULT_OBJECTIVE, help="Objective to complete"
     )
 
     args = parser.parse_args()
@@ -59,38 +61,47 @@ if __name__ == "__main__":
 
     try:
         while step_number < max_steps:
+            # Crawl and print context
             _crawler.crawl()
-
-            browser_context = _crawler.get_context()
-
             _crawler.print_context()
 
+            # Run Prompt
+            browser_context = _crawler.get_context()
             next_step = reason_next_step(
                 browser_context=browser_context[:4500],
-                personal_information=personal_information,
+                personal_information=PERSONAL_INFORAMTION,
                 memory=_mind.getMemories(),
                 objective=objective,
             )
 
+            # Parse results from prompt
             thought = next_step.get("thought")
-
-            _mind.addThought(thought)
-
             command = next_step.get("command")
-
             element_id = int(next_step.get("element_id", -1))
             text = next_step.get("text")
             option_value = next_step.get("option_value", None)
+            complete = next_step.get("complete", False)
 
+            # If complete then exit
+            if complete:
+                print("🎊🎊🎊🎊 Objective complete!")
+                exit(0)
+
+            # Add thought to mind
+            _mind.addThought(thought)
+
+            # Get node for command
             node = _crawler.get_node(element_id)
 
+            # Add command to the mind
             _mind.addCommand(command=command, node=node, text=text, value=option_value)
 
-            # If debug then wait for user to press enter before continuing
+            # If interactive then wait for user to press enter before continuing
             if interactive:
                 # Wait for user to press enter
                 input("Press enter to continue...")
 
+            # Run the right command
             if command == "CLICK":
                 _crawler.click(element_id)
             elif command == "TYPE":
@@ -107,8 +118,7 @@ if __name__ == "__main__":
             else:
                 print(f"Unknown command: {command}")
 
-            #            time.sleep(1)
-
+            # Go to next step
             step_number += 1
 
     except KeyboardInterrupt:

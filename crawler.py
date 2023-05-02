@@ -32,7 +32,7 @@ class Crawler:
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.3"
 
         self.context = browser.new_context(
-            user_agent=user_agent, viewport={"width": 1280, "height": 1080}
+            user_agent=user_agent, viewport={"width": 1280, "height": 1600}
         )
 
         # On new page callback
@@ -62,7 +62,7 @@ class Crawler:
         # self.page_element_buffer = {}
 
     def on_new_page(self, page):
-        print("New page opened:", page.url)
+        # print("New page opened:", page.url)
         self.page = page
 
     def scroll(self, direction):
