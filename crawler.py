@@ -279,6 +279,11 @@ function isElementVisibleAndNotObscured(element) {
                         "element => element.options[element.selectedIndex]?.value"
                     )
 
+                # Remove any new lines from any of the element_info values (improves logging)
+                for key, value in element_info.items():
+                    if value is not None:
+                        element_info[key] = value.replace("\n", " ")
+
                 # Get eleements x and y coordinates to center
                 center_x = page.evaluate(
                     "element => element.getBoundingClientRect().left + (element.getBoundingClientRect().width / 2)",

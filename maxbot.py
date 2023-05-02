@@ -18,7 +18,7 @@ load_dotenv()
 # Get personal information from ./personal.txt
 PERSONAL_INFORAMTION = ""
 with open("./personal.txt", "r", encoding="utf-8") as f:
-    personal_information = f.read()
+    PERSONAL_INFORAMTION = f.read()
 
 
 DEFAULT_OBJECTIVE = (
