@@ -281,7 +281,8 @@ function isElementVisibleAndNotObscured(element) {
 
                 # Remove any new lines from any of the element_info values (improves logging)
                 for key, value in element_info.items():
-                    if value is not None:
+                    # Check if not none and value is a string
+                    if value is not None and isinstance(value, str):
                         element_info[key] = value.replace("\n", " ")
 
                 # Get eleements x and y coordinates to center
