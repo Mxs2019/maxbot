@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-pw = PromptWrangler(base_url="http://localhost:3002/api")
+pw = PromptWrangler()
 
 
 @loading_spinner_decorator
