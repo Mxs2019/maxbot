@@ -4,22 +4,53 @@ Maxbot is a fork of [Natbot](https://github.com/nat/natbot) that improves upon t
 
 Overall the goal is to drive a web browser with GPT and perform tasks.
 
-## Prompt Management
+## Usage
 
-This repo uses [Prompt Wrangler]() for prompt management. To get started follow the steps:
+### Environment Variables
 
-1. Create an Prompt Wrangler account
-2. Clone the Prompt into your own account.
-3. Update the `prompt_wrangler.py` file with your own worksapce
-4. Add a .env
+Add a `.env` file with teh following variables
+
+```
+OPENAI_API_KEY=XXXX
+```
+
+### CLI Usage
+
+Run the following command with an objective to get started
+
+```
+python ./maxbot.py --objective="Buy airpods"
+```
+
+#### Args
+
+| Argument        | Description                                                        | Default Value                                                               |
+| --------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| `--objective`   | The objective you want to complete                                 | "Book a reservation at Dos Caminos in New York City for 4 people on Friday" |
+| `--max-steps`   | The max number of steps to take                                    | 20                                                                          |
+| `--interactive` | Manually press continue to run each command. Helpful for debugging | False                                                                       |
+| `--headless`    | Runs in headless mode                                              | False                                                                       |
 
 ## Improvements
 
+Overall this works is the same concept as Natbot but has a bunch of improvements.
+
 ### Better DOM Managment
 
-- [ ] Ability to interact with selects
+- [x] Ability to interact with selects
 - [x] Only include elements that are visible (hidden elements were currently making it)
+- [x] More reliable clicking
+- [ ] Handles opening new tabs
 
 ### Better Reasoning
 
-- [ ] Add memory that stores past steps
+- [x] Add memory that stores past steps
+- [ ] Knows when to stop
+
+## Prompt Management
+
+This repo uses [Prompt Wrangler](https://prompt-wrangler.com/) for prompt management. If you want to view the prompt or make modifications you should fork the prompt and create a Prompt Wrangler account.
+
+[View Prompt on Prompt Wrangler](https://prompt-wrangler.com/p/maxbot/reason-next-command)
+
+> If you don't want to use Prompt Wrangler you can copy and paste the prompt from Prompt Wrangler and hit the OpenAI API directly from this repo.

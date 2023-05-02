@@ -1,7 +1,6 @@
 import time
 from functools import wraps
 from yaspin import yaspin
-from halo import Halo
 from yaspin.spinners import Spinners
 
 

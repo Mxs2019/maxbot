@@ -5,17 +5,12 @@
 # Set OPENAI_API_KEY to your API key, and then run this from a terminal.
 #
 from dotenv import load_dotenv
-from InquirerPy import inquirer
 
-from playwright.sync_api import sync_playwright
-import time
+
 from sys import argv, exit, platform
-import openai
-import os
 from crawler import Crawler
 from mind import Mind
-from prompt_wrangler import reason_next_step
-import json
+from pw import reason_next_step
 import argparse
 
 load_dotenv()
@@ -24,8 +19,10 @@ personal_information = """Name: Max Shaw
 Phone Number: 2032738840
 Email: maxdshaw@gmail.com"""
 
-# objective = "Book a reservation at Dos Caminos in New York City for 4 people on Friday"
-objective = "Book a flight from New York to San Francisco on Friday"
+default_objective = (
+    "Book a reservation at Dos Caminos in New York City for 4 people on Friday"
+)
+# objective = "Book a flight from New York to San Francisco on Friday"
 
 if __name__ == "__main__":
     # Check if debug mode is turned on
@@ -33,7 +30,7 @@ if __name__ == "__main__":
 
     # max-stpes argument that defautls to 10
     parser.add_argument(
-        "--max-steps", type=int, default=10, help="Maximum number of steps to run"
+        "--max-steps", type=int, default=20, help="Maximum number of steps to run"
     )
     parser.add_argument(
         "--interactive",
@@ -43,10 +40,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--headless", action="store_true", default=False, help="Run in headless mode"
     )
+    parser.add_argument(
+        "--objective", type=str, default=default_objective, help="Objective to complete"
+    )
 
     args = parser.parse_args()
 
     max_steps = args.max_steps
+    objective = args.objective
     step_number = 0
     interactive = args.interactive
     headless = args.headless
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     _crawler = Crawler(headless=headless)
     _mind = Mind()
 
-    _crawler.go_to_page("flights.google.com")
+    _crawler.go_to_page("google.com")
 
     try:
         while step_number < max_steps:

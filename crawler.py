@@ -4,7 +4,6 @@
 #
 # Set OPENAI_API_KEY to your API key, and then run this from a terminal.
 #
-from dotenv import load_dotenv
 
 from playwright.sync_api import sync_playwright
 import time
@@ -18,23 +17,29 @@ from terminal_timer import loading_spinner_decorator
 
 init(autoreset=True)
 
-load_dotenv()
-
 
 class Crawler:
     def __init__(self, headless=False):
-        self.browser = (
+        browser = (
             sync_playwright()
             .start()
             .chromium.launch(
                 headless=headless,
             )
         )
+
         # Define a normal Chrome user agent
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.3"
 
-        self.page = self.browser.new_page(user_agent=user_agent)
-        self.page.set_viewport_size({"width": 1280, "height": 1080})
+        self.context = browser.new_context(
+            user_agent=user_agent, viewport={"width": 1280, "height": 1080}
+        )
+
+        # On new page callback
+        self.context.on("page", self.on_new_page)
+
+        # Load blank page
+        self.page = self.context.new_page()
 
         # Array of dom elements
         self.elements = []
@@ -55,6 +60,10 @@ class Crawler:
 
         # self.client = self.page.context.new_cdp_session(self.page)
         # self.page_element_buffer = {}
+
+    def on_new_page(self, page):
+        print("New page opened:", page.url)
+        self.page = page
 
     def scroll(self, direction):
         if direction == "up":
