@@ -77,10 +77,9 @@ if __name__ == "__main__":
             # Parse results from prompt
             thought = next_step.get("thought")
             command = next_step.get("command")
-            element_id = int(next_step.get("element_id", -1))
             text = next_step.get("text")
-            option_value = next_step.get("option_value", None)
             complete = next_step.get("complete", False)
+            form_values = next_step.get("form_values", None)
 
             # If complete then exit
             if complete:
@@ -90,33 +89,55 @@ if __name__ == "__main__":
             # Add thought to mind
             _mind.addThought(thought)
 
-            # Get node for command
-            node = _crawler.get_node(element_id)
+            # Check if it's a form_fill
+            if command == "FORM_FILL":
+                # Loop through form_values
+                for c in form_values:
+                    element_id = c.get("element_id")
+                    node = _crawler.get_node(element_id)
+                    value = c.get("value")
 
-            # Add command to the mind
-            _mind.addCommand(command=command, node=node, text=text, value=option_value)
+                    _mind.addCommand(command=command, node=node, value=value)
 
-            # If interactive then wait for user to press enter before continuing
-            if interactive:
-                # Wait for user to press enter
-                input("Press enter to continue...")
+                    if interactive:
+                        # Wait for user to press enter
+                        input("Press enter to continue...")
 
-            # Run the right command
-            if command == "CLICK":
-                _crawler.click(element_id)
-            elif command == "TYPE":
-                _crawler.type(element_id, text)
-            elif command == "TYPE_AND_SUBMIT":
-                _crawler.type(element_id, text)
-                _crawler.enter()
-            elif command == "SCROLL_UP":
-                _crawler.scroll("up")
-            elif command == "SCROLL_DOWN":
-                _crawler.scroll("down")
-            elif command == "SELECT_OPTION":
-                _crawler.select(node_index=element_id, value=option_value)
+                    # If node starts with <select
+                    if node.startswith("<select"):
+                        _crawler.select(node_index=element_id, value=value)
+                    else:
+                        _crawler.type(element_id, value)
+                        enter = c.get("enter", False)
+                        if enter:
+                            _crawler.enter()
+
             else:
-                print(f"Unknown command: {command}")
+                element_id = next_step.get("element_id")
+
+                # Get node for command
+                node = _crawler.get_node(element_id)
+
+                # Add command to the mind
+                _mind.addCommand(command=command, node=node)
+
+                if interactive:
+                    # Wait for user to press enter
+                    input("Press enter to continue...")
+
+                # If interactive then wait for user to press enter before continuing
+
+                # Run the right command
+                if command == "CLICK":
+                    _crawler.click(element_id)
+                elif command == "SCROLL_UP":
+                    _crawler.scroll("up")
+                elif command == "SCROLL_DOWN":
+                    _crawler.scroll("down")
+                elif command == "BACK":
+                    _crawler.back()
+                else:
+                    print(f"Unknown command: {command}")
 
             # Go to next step
             step_number += 1

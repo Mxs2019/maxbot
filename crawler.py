@@ -111,6 +111,10 @@ class Crawler:
 
         self.page.keyboard.type(text)
 
+    @loading_spinner_decorator
+    def back(self):
+        self.page.goBack()
+
     def enter(self):
         self.page.keyboard.press("Enter")
 

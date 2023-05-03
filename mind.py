@@ -1,4 +1,5 @@
 from colorama import Fore, Style, init
+from typing import Optional
 
 init(autoreset=True)
 
@@ -15,14 +16,13 @@ class Mind:
         self.memory.append(("observation", observation))
         self._log_entry("observation", observation)
 
-    def addCommand(self, command: str, node: str, text: str, value: str):
+    def addCommand(self, command: str, node: str, value: Optional[str] = None):
         node_first_line = node.split("\n")[0]
 
         command_string = f"{command} on {node_first_line}"
-        if text:
-            command_string += f" with text: {text}"
-        elif value:
+        if value:
             command_string += f" with value: {value}"
+
         self.memory.append(("command", command_string))
         self._log_entry("command", command_string)
 
